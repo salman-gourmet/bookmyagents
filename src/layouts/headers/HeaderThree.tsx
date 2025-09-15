@@ -23,9 +23,9 @@ const HeaderThree = () => {
                <div className="container-fluid container-1860">
                   <div className="row align-items-center">
                      <div className="col-lg-7 col-5">
-                        <div className="tgmenu__wrap d-flex align-items-center">
+                        <div className="tgmenu__wrap d-flex align-items-center justify-space-between" style={{ justifyContent: "space-between" }}>
                            <div className="logo">
-                              <Link className="logo-1" to="/"><img src="/assets/img/logo/logo-white.png" alt="Logo" /></Link>
+                              <Link className="logo-1" to="/"><img src="/assets/img/logo/logo-white1.png" alt="Logo" /></Link>
                               <Link className="logo-2 d-none" to="/"><img src="/assets/img/logo/logo-green.png" alt="Logo" /></Link>
                            </div>
                            <nav className="tgmenu__nav tgmenu-1-space ml-180">

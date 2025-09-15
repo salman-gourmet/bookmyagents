@@ -34,7 +34,7 @@ const AppNavigation = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomeOneMain />} />
+        <Route path="/" element={<HomeThreeMain />} />
         <Route path="/home-two" element={<HomeTwoMain />} />
         <Route path="/home-three" element={<HomeThreeMain />} />
         <Route path="/home-four" element={<HomeFourMain />} />
