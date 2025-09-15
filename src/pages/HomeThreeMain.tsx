@@ -8,7 +8,7 @@ const HomeThreeMain = () => {
    useAnalytics(GA_MEASUREMENT_ID);
    return (
       <Wrapper>
-         <SEO pageTitle={'Home Three'} />
+         <SEO pageTitle={'Home'} />
          <HomeThree />
       </Wrapper>
    )
