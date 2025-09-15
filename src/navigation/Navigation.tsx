@@ -1,5 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import HomeOneMain from '../pages/HomeOneMain';
+// import HomeOneMain from '../pages/HomeOneMain';
 import HomeTwoMain from '../pages/HomeTwoMain';
 import HomeThreeMain from '../pages/HomeThreeMain';
 import HomeFourMain from '../pages/HomeFourMain';
