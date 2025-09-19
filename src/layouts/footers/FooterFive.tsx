@@ -38,7 +38,7 @@ const FooterFive = () => {
                            <ul>
                               <li><Link to="/">Home</Link></li>
                               <li><Link to="/about">About Us</Link></li>
-                              <li><Link to="#">Services</Link></li>
+                              <li><Link to="/pricing">Services</Link></li>
                               <li><Link to="#">Tour Guide</Link></li>
                               <li><Link to="/contact"> Contact Us</Link></li>
                            </ul>

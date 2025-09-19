@@ -1,6 +1,6 @@
 import NavMenu from "./Menu/NavMenu"
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Offcanvas from "./Menu/Offcanvas";
 import Sidebar from "./Menu/Sidebar";
 import HeaderCart from "./Menu/HeaderCart";
@@ -9,12 +9,42 @@ import UseSticky from "../../hooks/UseSticky";
 import PhoneIcon from "../../svg/PhoneIcon";
 import CartIcon from "../../svg/CartIcon";
 import UserIcon from "../../svg/UserIcon";
+import { useAuth } from "../../contexts/AuthContext";
 
 const HeaderThree = () => {
 
    const { sticky } = UseSticky();
    const [offCanvas, setOffCanvas] = useState<boolean>(false);
    const [sidebar, setSidebar] = useState<boolean>(false);
+   const { isAuthenticated, user, logout } = useAuth();
+   const [navClick, setNavClick] = useState<boolean>(false);
+   const userMenuRef = useRef<HTMLDivElement>(null);
+
+   const handleLogout = async () => {
+      try {
+          await logout();
+          setNavClick(false);
+      } catch (error) {
+          console.error('Logout error:', error);
+      }
+  };
+
+   // Close dropdown when clicking outside
+   useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+         if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+            setNavClick(false);
+         }
+      };
+
+      if (navClick) {
+         document.addEventListener('mousedown', handleClickOutside);
+      }
+
+      return () => {
+         document.removeEventListener('mousedown', handleClickOutside);
+      };
+   }, [navClick]);
 
    return (
       <>
@@ -56,14 +86,94 @@ const HeaderThree = () => {
                               </button>
                               <HeaderCart />
                            </div>
-                           <div className="tg-header-btn ml-20 d-none d-sm-block">
+                           {isAuthenticated ? 
+                              <div className="tg-header-btn ml-20 d-none d-sm-block">
+                                 <div className="tg-user-menu" ref={userMenuRef} style={{ position: 'relative' }}>
+                                    <button 
+                                       className="tg-btn-header user-menu-trigger"
+                                       onClick={() => setNavClick(!navClick)}
+                                       style={{ 
+                                          background: 'none', 
+                                          border: 'none', 
+                                          cursor: 'pointer',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          gap: '8px',
+                                          color: 'inherit',
+                                          fontSize: 'inherit'
+                                       }}
+                                    >
+                                       <span className="text-white">
+                                          <UserIcon />
+                                       </span>
+                                       <span className="text-white">{user?.name || 'User'}</span>
+                                    </button>
+                                    {navClick && (
+                                       <ul className="user-dropdown-menu" style={{
+                                          position: 'absolute',
+                                          top: '100%',
+                                          right: '0',
+                                          background: '#fff',
+                                          border: '1px solid #ddd',
+                                          borderRadius: '4px',
+                                          boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                                          minWidth: '150px',
+                                          zIndex: 1000,
+                                          marginTop: '5px',
+                                          listStyle: 'none',
+                                          padding: '0',
+                                          margin: '5px 0 0 0'
+                                       }}>
+                                          <li>
+                                             <Link 
+                                                to="/dashboard" 
+                                                onClick={() => setNavClick(false)}
+                                                style={{
+                                                   display: 'block',
+                                                   padding: '10px 15px',
+                                                   color: '#333',
+                                                   textDecoration: 'none',
+                                                   borderBottom: '1px solid #eee',
+                                                   transition: 'background-color 0.2s'
+                                                }}
+                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                             >
+                                                Dashboard
+                                             </Link>
+                                          </li>
+                                          <li>
+                                             <button 
+                                                onClick={handleLogout}
+                                                style={{ 
+                                                   background: 'none', 
+                                                   border: 'none', 
+                                                   color: '#333', 
+                                                   cursor: 'pointer',
+                                                   width: '100%',
+                                                   textAlign: 'left',
+                                                   padding: '10px 15px',
+                                                   fontSize: '14px',
+                                                   transition: 'background-color 0.2s'
+                                                }}
+                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                             >
+                                                Logout
+                                             </button>
+                                          </li>
+                                       </ul>
+                                    )}
+                                 </div>
+                              </div>
+                            : <div className="tg-header-btn ml-20 d-none d-sm-block">
                               <Link className="tg-btn-header" to="/login">
                                  <span>
                                     <UserIcon />
                                  </span>
                                  Login
                               </Link>
-                           </div>
+                           </div>}
                            <div className="tg-header-menu-bar lh-1 p-relative ml-20 pl-20">
                               <span className="tg-header-border d-none d-xl-block"></span>
                               <button onClick={() => setSidebar(true)} style={{ cursor: "pointer" }} className="tgmenu-offcanvas-open-btn menu-tigger d-none d-xl-block">

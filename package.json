@@ -1,5 +1,5 @@
 {
-  "name": "tourex",
+  "name": "bookmytravelagents",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,7 +12,9 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@hookform/resolvers": "^5.0.1",
+    "@next/third-parties": "^15.5.3",
     "@reduxjs/toolkit": "^2.7.0",
+    "axios": "^1.12.2",
     "bootstrap": "^5.3.6",
     "flatpickr": "^4.6.13",
     "isotope-layout": "^3.0.6",

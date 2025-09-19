@@ -29,6 +29,8 @@ import BlogTwoMain from '../pages/BlogTwoMain';
 import BlogDetailsMain from '../pages/BlogDetailsMain';
 import ContactMain from '../pages/ContactMain';
 import ErrorMain from '../pages/ErrorMain';
+import DashboardMain from '../pages/DashboardMain';
+import ProtectedRoute from '../components/common/ProtectedRoute';
 
 const AppNavigation = () => {
   return (
@@ -63,6 +65,11 @@ const AppNavigation = () => {
         <Route path="/blog-standard" element={<BlogTwoMain />} />
         <Route path="/blog-details" element={<BlogDetailsMain />} />
         <Route path="/contact" element={<ContactMain />} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <DashboardMain />
+          </ProtectedRoute>
+        } />
         <Route path="*" element={<ErrorMain />} />
       </Routes>
     </Router>

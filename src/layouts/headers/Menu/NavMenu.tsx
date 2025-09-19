@@ -3,14 +3,11 @@ import menu_data from "../../../data/MenuData";
 import { useEffect, useState } from "react";
 
 const NavMenu = () => {
-    
-
     const [navClick, setNavClick] = useState<boolean>(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [navClick]);
-
     return (
         <ul className="navigation">
             {menu_data.map((menu) => (
@@ -36,6 +33,60 @@ const NavMenu = () => {
                     )}
                 </li>
             ))}
+            
+            {/* Dashboard link for authenticated users */}
+            {/* {isAuthenticated && (
+                <li>
+                    <Link to="/dashboard" onClick={() => setNavClick(!navClick)}>
+                        Dashboard
+                    </Link>
+                </li>
+            )} */}
+            
+            {/* Authentication links */}
+            {/* {isAuthenticated ? (
+                <li className="menu-item-has-children">
+                    <Link to="#" onClick={(e) => e.preventDefault()}>
+                        {user?.name || 'User'}
+                    </Link>
+                    <ul className="sub-menu">
+                        <li>
+                            <Link to="/dashboard" onClick={() => setNavClick(!navClick)}>
+                                Dashboard
+                            </Link>
+                        </li>
+                        <li>
+                            <button 
+                                onClick={handleLogout}
+                                style={{ 
+                                    background: 'none', 
+                                    border: 'none', 
+                                    color: 'inherit', 
+                                    cursor: 'pointer',
+                                    width: '100%',
+                                    textAlign: 'left',
+                                    padding: '10px 20px'
+                                }}
+                            >
+                                Logout
+                            </button>
+                        </li>
+                    </ul>
+                </li>
+            ) : (
+                <>
+                    <li>
+                        <Link to="/login" onClick={() => setNavClick(!navClick)}>
+                            Login
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/register" onClick={() => setNavClick(!navClick)}>
+                            Register
+                        </Link>
+                    </li>
+                </>
+            )} */}
         </ul>
     );
 };

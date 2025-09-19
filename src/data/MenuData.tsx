@@ -75,9 +75,15 @@ const menu_data: MenuItem[] = [
     {
         id: 5,
         has_dropdown: false,
-        title: "Contact",
-        link: "/contact",
+        title: "Pricing",
+        link: "/pricing",
     },
+    // {
+    //     id: 6,
+    //     has_dropdown: false,
+    //     title: "Contact",
+    //     link: "/contact",
+    // },
 ];
 
 export default menu_data;
