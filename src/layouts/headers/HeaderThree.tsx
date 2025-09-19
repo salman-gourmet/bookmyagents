@@ -106,7 +106,7 @@ const HeaderThree = () => {
                                        <span className="text-white">
                                           <UserIcon />
                                        </span>
-                                       <span className="text-white">{user?.name || 'User'}</span>
+                                       <span className="text-white">{user?.fullName || 'User'}</span>
                                     </button>
                                     {navClick && (
                                        <ul className="user-dropdown-menu" style={{

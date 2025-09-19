@@ -1,6 +1,6 @@
 import NavMenu from "./Menu/NavMenu"
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Offcanvas from "./Menu/Offcanvas";
 import Sidebar from "./Menu/Sidebar";
 import HeaderSearch from "./Menu/HeaderSearch";
@@ -9,6 +9,8 @@ import TotalCart from "./Menu/TotalCart";
 import UseSticky from "../../hooks/UseSticky";
 import SearchIcon from "../../svg/SearchIcon";
 import CartIconTwo from "../../svg/CartIconTwo";
+import UserIcon from "../../svg/UserIcon";
+import { useAuth } from "../../contexts/AuthContext";
 
 const InnerHeader = () => {
 
@@ -16,6 +18,35 @@ const InnerHeader = () => {
    const [offCanvas, setOffCanvas] = useState<boolean>(false);
    const [sidebar, setSidebar] = useState<boolean>(false);
    const [isSearch, setIsSearch] = useState<boolean>(false);
+   const { isAuthenticated, user, logout } = useAuth();
+   const [navClick, setNavClick] = useState<boolean>(false);
+   const userMenuRef = useRef<HTMLDivElement>(null);
+
+   const handleLogout = async () => {
+      try {
+          await logout();
+          setNavClick(false);
+      } catch (error) {
+          console.error('Logout error:', error);
+      }
+  };
+
+   // Close dropdown when clicking outside
+   useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+         if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+            setNavClick(false);
+         }
+      };
+
+      if (navClick) {
+         document.addEventListener('mousedown', handleClickOutside);
+      }
+
+      return () => {
+         document.removeEventListener('mousedown', handleClickOutside);
+      };
+   }, [navClick]);
 
    return (
       <>
@@ -50,6 +81,58 @@ const InnerHeader = () => {
                                  </button>
                                  <HeaderCart />
                               </div>
+                              {isAuthenticated ? 
+                                 <div className="tg-header-btn ml-10 d-none d-sm-block">
+                                    <div className="tg-header-user-menu" ref={userMenuRef}>
+                                       <button 
+                                          className="tg-header-user-button"
+                                          onClick={() => setNavClick(!navClick)}
+                                       >
+                                          {/* <span className="tg-header-user-name">{user?.fullName || 'User'}</span> */}
+                                          <span className="tg-header-user-icon">
+                                             <UserIcon />
+                                          </span>
+                                       </button>
+                                       {navClick && (
+                                          <ul className="tg-header-user-dropdown">
+                                             <li className="tg-header-user-profile">
+                                                <div className="tg-header-user-avatar">
+                                                   {user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
+                                                </div>
+                                                <div className="tg-header-user-info">
+                                                   <div className="tg-header-user-fullname">
+                                                      {user?.fullName || 'User'}
+                                                   </div>
+                                                   <div className="tg-header-user-email">
+                                                      {user?.email || 'user@example.com'}
+                                                   </div>
+                                                </div>
+                                             </li>
+                                             <li className="tg-header-user-dropdown-item">
+                                                <Link 
+                                                   to="/" 
+                                                   onClick={() => setNavClick(false)}
+                                                >
+                                                   Home
+                                                </Link>
+                                             </li>
+                                             <li className="tg-header-user-dropdown-item">
+                                                <button onClick={handleLogout}>
+                                                   Logout
+                                                </button>
+                                             </li>
+                                          </ul>
+                                       )}
+                                    </div>
+                                 </div>
+                               : <div className="tg-header-btn ml-20 d-none d-sm-block">
+                                 <Link className="tg-btn-header" to="/login">
+                                    <span>
+                                       <UserIcon />
+                                    </span>
+                                    Login
+                                 </Link>
+                              </div>}
                               <div className="tg-header-menu-bar lh-1 p-relative ml-10">
                                  <button onClick={() => setSidebar(true)} className="tgmenu-offcanvas-open-btn menu-tigger d-none d-xl-block">
                                     <span></span>

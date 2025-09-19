@@ -116,16 +116,17 @@ const DashboardArea: React.FC = () => {
             <div className="dashboard-header mb-40">
               <div className="row align-items-center">
                 <div className="col-md-6">
-                  <h2 className="dashboard-title">Welcome back, {user?.fullName}!</h2>
+                  <h2 className="dashboard-title">Welcome back, {user?.fullName || 'User'}!</h2>
                   <p className="dashboard-subtitle">Manage your users and subscriptions from here.</p>
                 </div>
-                <div className="col-md-6 text-end">
-                  <button 
+                <div className="col-md-6">
+                  {/* <button 
                     onClick={handleLogout}
                     className="btn btn-danger"
+                    style={{width: '100px'}}
                   >
                     Logout
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
