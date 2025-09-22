@@ -28,7 +28,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     setError(null);
     try {
       const response = await subscriptionService.getSubscriptions();
-      setSubscriptions(response.subscriptions);
+      setSubscriptions(response.data);
     } catch (err: any) {
       // Handle different types of errors
       if (err.response?.status === 404) {
@@ -195,7 +195,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           }}>
             {subscriptions.map((subscription) => (
               <div
-                key={subscription.id}
+                key={subscription._id}
                 style={{
                   border: subscription.isPopular ? '2px solid #560CE3' : '1px solid #e0e0e0',
                   borderRadius: '12px',

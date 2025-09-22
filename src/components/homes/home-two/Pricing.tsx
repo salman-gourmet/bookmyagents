@@ -98,7 +98,7 @@ const Pricing = () => {
                </div>
                {subscriptions.length > 0 ? (
                   subscriptions.map((subscription) => (
-                     <div key={subscription.id} className="col-lg-4 col-md-6">
+                     <div key={subscription._id} className="col-lg-4 col-md-6">
                         <div className={`tg-pricing-wrap mb-30 wow fadeInUp ${subscription.isPopular ? 'popular-plan' : ''}`} data-wow-delay=".3s" data-wow-duration=".9s">
                            {subscription.isPopular && (
                               <div className="popular-badge">

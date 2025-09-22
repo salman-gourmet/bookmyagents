@@ -1,4 +1,3 @@
-import React from 'react';
 import SubscriptionButton from '../components/common/SubscriptionButton';
 import SubscriptionModal from '../modals/SubscriptionModal';
 import { useSubscriptionModal } from '../hooks/UseSubscriptionModal';

@@ -37,41 +37,49 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
         return {
           ...baseStyles,
           backgroundColor: '#560CE3',
-          color: 'white',
-          ':hover': {
-            backgroundColor: '#4a0bc7'
-          }
+          color: 'white'
         };
       case 'secondary':
         return {
           ...baseStyles,
           backgroundColor: '#6c757d',
-          color: 'white',
-          ':hover': {
-            backgroundColor: '#5a6268'
-          }
+          color: 'white'
         };
       case 'outline':
         return {
           ...baseStyles,
           backgroundColor: 'transparent',
           color: '#560CE3',
-          border: '2px solid #560CE3',
-          ':hover': {
-            backgroundColor: '#560CE3',
-            color: 'white'
-          }
+          border: '2px solid #560CE3'
         };
       default:
         return baseStyles;
     }
   };
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const buttonStyles = getButtonStyles();
-    if (buttonStyles[':hover']) {
-      Object.assign(e.currentTarget.style, buttonStyles[':hover']);
+  const getHoverStyles = (): React.CSSProperties => {
+    switch (variant) {
+      case 'primary':
+        return {
+          backgroundColor: '#4a0bc7'
+        };
+      case 'secondary':
+        return {
+          backgroundColor: '#5a6268'
+        };
+      case 'outline':
+        return {
+          backgroundColor: '#560CE3',
+          color: 'white'
+        };
+      default:
+        return {};
     }
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const hoverStyles = getHoverStyles();
+    Object.assign(e.currentTarget.style, hoverStyles);
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
