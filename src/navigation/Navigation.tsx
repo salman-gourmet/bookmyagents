@@ -30,7 +30,9 @@ import BlogDetailsMain from '../pages/BlogDetailsMain';
 import ContactMain from '../pages/ContactMain';
 import ErrorMain from '../pages/ErrorMain';
 import DashboardMain from '../pages/DashboardMain';
-import ProtectedRoute from '../components/common/ProtectedRoute';
+import AgentDashboardMain from '../pages/AgentDashboardMain';
+import AdminRoute from '../components/common/AdminRoute';
+import AgentRoute from '../components/common/AgentRoute';
 
 const AppNavigation = () => {
   return (
@@ -66,9 +68,14 @@ const AppNavigation = () => {
         <Route path="/blog-details" element={<BlogDetailsMain />} />
         <Route path="/contact" element={<ContactMain />} />
         <Route path="/dashboard" element={
-          <ProtectedRoute>
+          <AdminRoute>
             <DashboardMain />
-          </ProtectedRoute>
+          </AdminRoute>
+        } />
+        <Route path="/agent-dashboard" element={
+          <AgentRoute>
+            <AgentDashboardMain />
+          </AgentRoute>
         } />
         <Route path="*" element={<ErrorMain />} />
       </Routes>

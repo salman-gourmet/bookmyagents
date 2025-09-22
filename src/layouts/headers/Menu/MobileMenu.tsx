@@ -6,7 +6,7 @@ import menu_data from "../../../data/MenuData";
 import { useAuth } from "../../../contexts/AuthContext";
 
 const MobileMenu = () => {
-   const { isAuthenticated, user, logout } = useAuth();
+   const { isAuthenticated, isAdmin, isAgent, user, logout } = useAuth();
    const [navTitle, setNavTitle] = useState("");
    const [, setSubNavTitle] = useState("");
 
@@ -57,11 +57,18 @@ const MobileMenu = () => {
             </li>
          ))}
          
-         {/* Dashboard link for authenticated users */}
-         {isAuthenticated && (
+         {/* Dashboard links for admin and agent users */}
+         {isAdmin && (
             <li>
                <Link to="/dashboard">
-                  Dashboard
+                  Admin Dashboard
+               </Link>
+            </li>
+         )}
+         {isAgent && (
+            <li>
+               <Link to="/agent-dashboard">
+                  Agent Dashboard
                </Link>
             </li>
          )}
@@ -70,14 +77,23 @@ const MobileMenu = () => {
          {isAuthenticated ? (
             <li className="menu-item-has-children">
                <Link to="#">
-                  {user?.name || 'User'}
+                  {user?.fullName || 'User'}
                </Link>
                <ul className="sub-menu">
-                  <li>
-                     <Link to="/dashboard">
-                        Dashboard
-                     </Link>
-                  </li>
+                  {isAdmin && (
+                     <li>
+                        <Link to="/dashboard">
+                           Admin Dashboard
+                        </Link>
+                     </li>
+                  )}
+                  {isAgent && (
+                     <li>
+                        <Link to="/agent-dashboard">
+                           Agent Dashboard
+                        </Link>
+                     </li>
+                  )}
                   <li>
                      <button 
                         onClick={handleLogout}

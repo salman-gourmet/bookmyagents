@@ -16,7 +16,7 @@ const HeaderThree = () => {
    const { sticky } = UseSticky();
    const [offCanvas, setOffCanvas] = useState<boolean>(false);
    const [sidebar, setSidebar] = useState<boolean>(false);
-   const { isAuthenticated, user, logout } = useAuth();
+   const { isAuthenticated, isAdmin, isAgent, user, logout } = useAuth();
    const [navClick, setNavClick] = useState<boolean>(false);
    const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -124,24 +124,46 @@ const HeaderThree = () => {
                                           padding: '0',
                                           margin: '5px 0 0 0'
                                        }}>
-                                          <li>
-                                             <Link 
-                                                to="/dashboard" 
-                                                onClick={() => setNavClick(false)}
-                                                style={{
-                                                   display: 'block',
-                                                   padding: '10px 15px',
-                                                   color: '#333',
-                                                   textDecoration: 'none',
-                                                   borderBottom: '1px solid #eee',
-                                                   transition: 'background-color 0.2s'
-                                                }}
-                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
-                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                                             >
-                                                Dashboard
-                                             </Link>
-                                          </li>
+                                          {isAdmin && (
+                                             <li>
+                                                <Link 
+                                                   to="/dashboard" 
+                                                   onClick={() => setNavClick(false)}
+                                                   style={{
+                                                      display: 'block',
+                                                      padding: '10px 15px',
+                                                      color: '#333',
+                                                      textDecoration: 'none',
+                                                      borderBottom: '1px solid #eee',
+                                                      transition: 'background-color 0.2s'
+                                                   }}
+                                                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                                >
+                                                   Admin Dashboard
+                                                </Link>
+                                             </li>
+                                          )}
+                                          {isAgent && (
+                                             <li>
+                                                <Link 
+                                                   to="/agent-dashboard" 
+                                                   onClick={() => setNavClick(false)}
+                                                   style={{
+                                                      display: 'block',
+                                                      padding: '10px 15px',
+                                                      color: '#333',
+                                                      textDecoration: 'none',
+                                                      borderBottom: '1px solid #eee',
+                                                      transition: 'background-color 0.2s'
+                                                   }}
+                                                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                                >
+                                                   Dashboard
+                                                </Link>
+                                             </li>
+                                          )}
                                           <li>
                                              <button 
                                                 onClick={handleLogout}

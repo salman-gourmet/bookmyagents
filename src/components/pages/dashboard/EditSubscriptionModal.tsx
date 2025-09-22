@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { type Subscription } from '../../../services/subscriptionService';
 
 interface EditSubscriptionModalProps {
@@ -73,13 +73,14 @@ const EditSubscriptionModal: React.FC<EditSubscriptionModalProps> = ({
         style={{
           backgroundColor: 'white',
           borderRadius: '12px',
-          padding: '30px',
+          padding: window.innerWidth < 768 ? '20px' : '30px',
           maxWidth: '600px',
           width: '100%',
           maxHeight: '90vh',
           overflowY: 'auto',
           position: 'relative',
-          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)'
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+          margin: window.innerWidth < 768 ? '10px' : '20px'
         }}
       >
         {/* Close Button */}
@@ -200,7 +201,8 @@ const EditSubscriptionModal: React.FC<EditSubscriptionModalProps> = ({
             display: 'flex', 
             gap: '15px', 
             justifyContent: 'flex-end',
-            marginTop: '30px'
+            marginTop: '30px',
+            flexWrap: 'wrap'
           }}>
             <button
               type="button"
@@ -212,7 +214,9 @@ const EditSubscriptionModal: React.FC<EditSubscriptionModalProps> = ({
                 borderRadius: '6px',
                 background: 'white',
                 color: '#6c757d',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                flex: window.innerWidth < 768 ? '1' : 'none',
+                minWidth: window.innerWidth < 768 ? 'auto' : '100px'
               }}
             >
               Cancel
@@ -227,7 +231,9 @@ const EditSubscriptionModal: React.FC<EditSubscriptionModalProps> = ({
                 borderRadius: '6px',
                 background: loading ? '#ccc' : '#560CE3',
                 color: 'white',
-                cursor: loading ? 'not-allowed' : 'pointer'
+                cursor: loading ? 'not-allowed' : 'pointer',
+                flex: window.innerWidth < 768 ? '1' : 'none',
+                minWidth: window.innerWidth < 768 ? 'auto' : '120px'
               }}
             >
               {loading ? 'Updating...' : 'Update Plan'}

@@ -8,7 +8,7 @@ import EditSubscriptionModal from './EditSubscriptionModal';
 type ActiveModule = 'users' | 'subscriptions';
 
 const DashboardArea: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [activeModule, setActiveModule] = useState<ActiveModule>('users');
   
   // User Module State
@@ -99,13 +99,13 @@ const DashboardArea: React.FC = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await logout();
+  //   } catch (error) {
+  //     console.error('Logout error:', error);
+  //   }
+  // };
 
   return (
     <div className="dashboard-area pt-120 pb-120">
@@ -115,11 +115,11 @@ const DashboardArea: React.FC = () => {
             {/* Dashboard Header */}
             <div className="dashboard-header mb-40">
               <div className="row align-items-center">
-                <div className="col-md-6">
+                <div className="col-lg-8 col-md-7 col-12">
                   <h2 className="dashboard-title">Welcome back, {user?.fullName || 'User'}!</h2>
                   <p className="dashboard-subtitle">Manage your users and subscriptions from here.</p>
                 </div>
-                <div className="col-md-6">
+                <div className="col-lg-4 col-md-5 col-12 text-md-end text-start mt-md-0 mt-3">
                   {/* <button 
                     onClick={handleLogout}
                     className="btn btn-danger"
@@ -133,20 +133,22 @@ const DashboardArea: React.FC = () => {
 
             {/* Module Navigation */}
             <div className="module-navigation mb-40">
-              <div className="nav nav-pills justify-content-center">
+              <div className="nav nav-pills justify-content-center flex-wrap">
                 <button
                   className={`nav-link ${activeModule === 'users' ? 'active' : ''}`}
                   onClick={() => setActiveModule('users')}
                 >
                   <i className="fas fa-users me-2"></i>
-                  User Module
+                  <span className="d-none d-sm-inline">User Module</span>
+                  <span className="d-sm-none">Users</span>
                 </button>
                 <button
                   className={`nav-link ${activeModule === 'subscriptions' ? 'active' : ''}`}
                   onClick={() => setActiveModule('subscriptions')}
                 >
                   <i className="fas fa-credit-card me-2"></i>
-                  Subscription Module
+                  <span className="d-none d-sm-inline">Subscription Module</span>
+                  <span className="d-sm-none">Subscriptions</span>
                 </button>
               </div>
             </div>
@@ -156,7 +158,7 @@ const DashboardArea: React.FC = () => {
               <>
                 {/* User Stats Cards */}
                 <div className="row mb-40">
-                  <div className="col-lg-4 col-md-6 mb-30">
+                  <div className="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-30">
                     <div className="stats-card">
                       <div className="stats-icon">
                         <i className="fas fa-users"></i>
@@ -167,7 +169,7 @@ const DashboardArea: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-lg-4 col-md-6 mb-30">
+                  <div className="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-30">
                     <div className="stats-card">
                       <div className="stats-icon">
                         <i className="fas fa-user-check"></i>
@@ -178,7 +180,7 @@ const DashboardArea: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-lg-4 col-md-6 mb-30">
+                  <div className="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-30">
                     <div className="stats-card">
                       <div className="stats-icon">
                         <i className="fas fa-user-plus"></i>
@@ -197,8 +199,8 @@ const DashboardArea: React.FC = () => {
                     <h4>User Filters</h4>
                   </div>
                   <div className="card-body">
-                    <div className="row">
-                      <div className="col-md-4">
+                    <div className="row g-3">
+                      <div className="col-lg-4 col-md-6 col-12">
                         <input
                           type="text"
                           className="form-control"
@@ -207,13 +209,14 @@ const DashboardArea: React.FC = () => {
                           onChange={(e) => setUserFilters({...userFilters, search: e.target.value})}
                         />
                       </div>
-
-                      <div className="col-md-2">
+                      <div className="col-lg-2 col-md-3 col-6">
                         <button
                           className="btn btn-primary w-100"
                           onClick={fetchUsers}
                         >
-                          Search
+                          <i className="fas fa-search d-md-none me-1"></i>
+                          <span className="d-none d-md-inline">Search</span>
+                          <span className="d-md-none">Search</span>
                         </button>
                       </div>
                     </div>
@@ -285,7 +288,7 @@ const DashboardArea: React.FC = () => {
               <>
                 {/* Subscription Stats */}
                 <div className="row mb-40">
-                  <div className="col-lg-4 col-md-6 mb-30">
+                  <div className="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-30">
                     <div className="stats-card">
                       <div className="stats-icon">
                         <i className="fas fa-credit-card"></i>
@@ -296,7 +299,7 @@ const DashboardArea: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-lg-4 col-md-6 mb-30">
+                  <div className="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-30">
                     <div className="stats-card">
                       <div className="stats-icon">
                         <i className="fas fa-star"></i>
@@ -307,7 +310,7 @@ const DashboardArea: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-lg-4 col-md-6 mb-30">
+                  <div className="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-30">
                     <div className="stats-card">
                       <div className="stats-icon">
                         <i className="fas fa-dollar-sign"></i>

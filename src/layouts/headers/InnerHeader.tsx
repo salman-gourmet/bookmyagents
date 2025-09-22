@@ -18,7 +18,7 @@ const InnerHeader = () => {
    const [offCanvas, setOffCanvas] = useState<boolean>(false);
    const [sidebar, setSidebar] = useState<boolean>(false);
    const [isSearch, setIsSearch] = useState<boolean>(false);
-   const { isAuthenticated, user, logout } = useAuth();
+   const { isAuthenticated, isAdmin, isAgent, user, logout } = useAuth();
    const [navClick, setNavClick] = useState<boolean>(false);
    const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -116,6 +116,26 @@ const InnerHeader = () => {
                                                    Home
                                                 </Link>
                                              </li>
+                                             {isAdmin && (
+                                                <li className="tg-header-user-dropdown-item">
+                                                   <Link 
+                                                      to="/dashboard" 
+                                                      onClick={() => setNavClick(false)}
+                                                   >
+                                                      Admin Dashboard
+                                                   </Link>
+                                                </li>
+                                             )}
+                                             {isAgent && (
+                                                <li className="tg-header-user-dropdown-item">
+                                                   <Link 
+                                                      to="/agent-dashboard" 
+                                                      onClick={() => setNavClick(false)}
+                                                   >
+                                                      Agent Dashboard
+                                                   </Link>
+                                                </li>
+                                             )}
                                              <li className="tg-header-user-dropdown-item">
                                                 <button onClick={handleLogout}>
                                                    Logout

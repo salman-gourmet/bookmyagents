@@ -5,6 +5,8 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isAdmin: boolean;
+  isAgent: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (userData: RegisterData) => Promise<void>;
   logout: () => Promise<void>;
@@ -23,6 +25,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Check if user is authenticated
   const isAuthenticated = !!user;
+  
+  // Check if user is admin
+  const isAdmin = user?.role === 'admin';
+  
+  // Check if user is agent
+  const isAgent = user?.role === 'agent';
 
   // Initialize auth state on app load
   useEffect(() => {
@@ -63,6 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Store token and user data
       localStorage.setItem('authToken', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
+      console.log("Response.user",response.user);
       setUser(response.user);
     } catch (error) {
       throw error;
@@ -112,6 +121,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     isAuthenticated,
     isLoading,
+    isAdmin,
+    isAgent,
     login,
     register,
     logout,

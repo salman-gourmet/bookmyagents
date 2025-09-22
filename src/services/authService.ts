@@ -7,14 +7,16 @@ export interface LoginCredentials {
 }
 
 export interface RegisterData {
-  name: string;
+  fullName: string;
   email: string;
   password: string;
+  role?: string;
   confirmPassword?: string;
 }
 
 export interface User {
   id: string;
+  _id: string;
   fullName: string;
   email: string;
   role?: string;
@@ -44,7 +46,7 @@ export const authService = {
   // Register user
   register: async (userData: RegisterData): Promise<AuthResponse> => {
     try {
-      const response = await api.post('/auth/register', userData);
+      const response = await api.post('/auth/signup', userData);
       return response.data;
     } catch (error) {
       throw error;

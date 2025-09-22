@@ -26,7 +26,7 @@ const LoginForm = () => {
       try {
          await login(formData)
          toast.success('Login successful!')
-         navigate('/dashboard')
+         navigate('/')
       } catch (error: any) {
          toast.error(error.response?.data?.message || 'Login failed. Please try again.')
       } finally {
