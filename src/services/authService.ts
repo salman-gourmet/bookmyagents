@@ -23,6 +23,15 @@ export interface User {
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  subscription?: {
+    id: string;
+    name: string;
+    price: number;
+    duration: string;
+    isActive: boolean;
+    assignedAt?: string;
+    expiresAt?: string;
+  };
 }
 
 export interface AuthResponse {

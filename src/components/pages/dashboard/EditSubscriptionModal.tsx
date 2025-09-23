@@ -130,30 +130,31 @@ const EditSubscriptionModal: React.FC<EditSubscriptionModalProps> = ({
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label">Plan Name</label>
-            <input
-              type="text"
-              className="form-control"
-              id="name"
-              value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="price" className="form-label">Price ($)</label>
-            <input
-              type="number"
-              className="form-control"
-              id="price"
-              value={formData.price}
-              onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
-              min="0"
-              step="0.01"
-              required
-            />
+          <div className="row mb-3">
+            <div className="col-md-8">
+              <label htmlFor="name" className="form-label">Plan Name</label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                required
+              />
+            </div>
+            <div className="col-md-4">
+              <label htmlFor="price" className="form-label">Price ($)</label>
+              <input
+                type="number"
+                className="form-control"
+                id="price"
+                value={formData.price}
+                onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
           </div>
 
           <div className="mb-3">
@@ -173,7 +174,8 @@ const EditSubscriptionModal: React.FC<EditSubscriptionModalProps> = ({
             <textarea
               className="form-control"
               id="features"
-              rows={6}
+              rows={15}
+              style={{ minHeight: '120px' }}
               value={formData.features}
               onChange={(e) => setFormData({...formData, features: e.target.value})}
               placeholder="Enter features, one per line..."

@@ -140,7 +140,7 @@ const HeaderThree = () => {
                                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
                                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                                                 >
-                                                   Admin Dashboard
+                                                   Dashboard
                                                 </Link>
                                              </li>
                                           )}

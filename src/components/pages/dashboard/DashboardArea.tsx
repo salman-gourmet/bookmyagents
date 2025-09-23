@@ -4,8 +4,10 @@ import { userService, type UserFilters } from '../../../services/userService';
 import { type User } from '../../../services/authService';
 import { subscriptionService, type Subscription } from '../../../services/subscriptionService';
 import EditSubscriptionModal from './EditSubscriptionModal';
+import UserSubscriptionModal from './UserSubscriptionModal';
 
 type ActiveModule = 'users' | 'subscriptions';
+type UserRoleFilter = 'all' | 'admin' | 'agent' | 'user';
 
 const DashboardArea: React.FC = () => {
   const { user } = useAuth();
@@ -25,6 +27,9 @@ const DashboardArea: React.FC = () => {
     search: '',
     role: ''
   });
+  const [roleFilter, setRoleFilter] = useState<UserRoleFilter>('all');
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showUserSubscriptionModal, setShowUserSubscriptionModal] = useState(false);
 
   // Subscription Module State
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -78,6 +83,7 @@ const DashboardArea: React.FC = () => {
 
   const handleUserStatusToggle = async (userId: string, currentStatus: boolean) => {
     try {
+      console.log("userId", userId);
       const newStatus = !currentStatus;
       await userService.updateUser(userId, { isActive: newStatus });
       fetchUsers(); // Refresh the list
@@ -98,6 +104,33 @@ const DashboardArea: React.FC = () => {
       console.error('Error updating subscription:', error);
     }
   };
+
+  const handleRoleFilterChange = (role: UserRoleFilter) => {
+    setRoleFilter(role);
+    const newFilters = {
+      ...userFilters,
+      role: role === 'all' ? '' : role
+    };
+    setUserFilters(newFilters);
+  };
+
+  const handleAssignSubscription = (userItem: User) => {
+    setSelectedUser(userItem);
+    setShowUserSubscriptionModal(true);
+  };
+
+  const handleSubscriptionAssigned = () => {
+    fetchUsers(); // Refresh users list
+  };
+
+  // Filter users by role for display
+  const getFilteredUsers = () => {
+    if (roleFilter === 'all') return users;
+    const filteredUsers = users.filter(userItem => userItem.role === roleFilter);
+    console.log("filteredUsers", filteredUsers);
+    return filteredUsers;
+  };
+
 
   // const handleLogout = async () => {
   //   try {
@@ -193,13 +226,13 @@ const DashboardArea: React.FC = () => {
                   </div>
                 </div>
 
-                {/* User Filters */}
+                {/* Role Filter Tabs */}
                 <div className="dashboard-card mb-30">
                   <div className="card-header">
-                    <h4>User Filters</h4>
+                    <h4>User Management</h4>
                   </div>
                   <div className="card-body">
-                    <div className="row g-3">
+                    <div className="row g-3 mb-3">
                       <div className="col-lg-4 col-md-6 col-12">
                         <input
                           type="text"
@@ -220,13 +253,53 @@ const DashboardArea: React.FC = () => {
                         </button>
                       </div>
                     </div>
+                    
+                    {/* Role Filter Tabs */}
+                    <div className="role-filter-tabs">
+                      <div className="nav nav-pills justify-content-center">
+                        <button
+                          className={`nav-link ${roleFilter === 'all' ? 'active' : ''}`}
+                          onClick={() => handleRoleFilterChange('all')}
+                        >
+                          <i className="fas fa-users me-2"></i>
+                          All Users ({userStats.totalUsers})
+                        </button>
+                        <button
+                          className={`nav-link ${roleFilter === 'admin' ? 'active' : ''}`}
+                          onClick={() => handleRoleFilterChange('admin')}
+                        >
+                          <i className="fas fa-shield-alt me-2 role-icon-admin"></i>
+                          Admins ({users.filter(u => u.role === 'admin').length})
+                        </button>
+                        <button
+                          className={`nav-link ${roleFilter === 'agent' ? 'active' : ''}`}
+                          onClick={() => handleRoleFilterChange('agent')}
+                        >
+                          <i className="fas fa-user-tie me-2 role-icon-agent"></i>
+                          Agents ({users.filter(u => u.role === 'agent').length})
+                          {/* <small className="d-block text-muted">With Subscriptions</small> */}
+                        </button>
+                        <button
+                          className={`nav-link ${roleFilter === 'user' ? 'active' : ''}`}
+                          onClick={() => handleRoleFilterChange('user')}
+                        >
+                          <i className="fas fa-user me-2 role-icon-user"></i>
+                          Users ({users.filter(u => u.role === 'user' || !u.role).length})
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 {/* Users Table */}
                 <div className="dashboard-card">
                   <div className="card-header">
-                    <h4>User Listing</h4>
+                    <h4>
+                      {roleFilter === 'all' ? 'All Users' : 
+                       roleFilter === 'admin' ? 'Admin Users' :
+                       roleFilter === 'agent' ? 'Agent Users' : 'Regular Users'}
+                      <span className="badge bg-secondary ms-2">{getFilteredUsers().length}</span>
+                    </h4>
                   </div>
                   <div className="card-body">
                     {userLoading ? (
@@ -244,38 +317,87 @@ const DashboardArea: React.FC = () => {
                               <th>Email</th>
                               <th>Role</th>
                               <th>Status</th>
+                              <th>Agent Subscription</th>
                               <th>Created</th>
                               <th>Actions</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {Array.isArray(users) && users.map((userItem) => (
+                            {Array.isArray(getFilteredUsers()) && getFilteredUsers().map((userItem) => (
                               <tr key={userItem.id}>
                                 <td>{userItem.fullName}</td>
                                 <td>{userItem.email}</td>
                                 <td>
-                                  <span className={`badge ${userItem.role === 'admin' ? 'bg-danger' : 'bg-primary'}`}>
+                                  <span className={`badge ${
+                                    userItem.role === 'admin' ? 'bg-danger' : 
+                                    userItem.role === 'agent' ? 'bg-warning' : 'bg-primary'
+                                  }`}>
                                     {userItem.role || 'user'}
                                   </span>
                                 </td>
                                 <td>
-                                  <span className={`badge ${userItem.role === 'active' ? 'bg-success' : 'bg-secondary'}`}>
+                                  <span className={`badge ${userItem.isActive ? 'bg-success' : 'bg-secondary'}`}>
                                     {userItem.isActive ? 'Active' : 'Inactive'}
                                   </span>
                                 </td>
+                                <td>
+                                  {userItem.role === 'agent' ? (
+                                    userItem.subscription ? (
+                                      <div className="subscription-info">
+                                        <span className="badge bg-info">
+                                          <i className="fas fa-check-circle me-1"></i>
+                                          {userItem.subscription.name}
+                                        </span>
+                                        {/* <div className="subscription-price">
+                                          <i className="fas fa-dollar-sign me-1"></i>
+                                          {userItem.subscription.price}/{userItem.subscription.duration}
+                                        </div> */}
+                                      </div>
+                                    ) : (
+                                      <span className="badge bg-warning">
+                                        <i className="fas fa-exclamation-triangle me-1"></i>
+                                        No Subscription
+                                      </span>
+                                    )
+                                  ) : (
+                                    <span className="text-muted">
+                                      <i className="fas fa-minus me-1"></i>
+                                      N/A
+                                    </span>
+                                  )}
+                                </td>
                                 <td>{userItem.createdAt ? new Date(userItem.createdAt).toLocaleDateString() : 'N/A'}</td>
                                 <td>
-                                  <button
-                                    className={`btn btn-sm ${userItem.isActive ? 'btn-warning' : 'btn-success'}`}
-                                    onClick={() => handleUserStatusToggle(userItem.id, userItem.isActive || false)}
-                                  >
-                                    {userItem.isActive ? 'Deactivate' : 'Activate'}
-                                  </button>
+                                  <div className="btn-group" role="group">
+                                    <button
+                                      className={`btn btn-sm ${userItem.isActive ? 'btn-warning' : 'btn-success'}`}
+                                      onClick={() => handleUserStatusToggle(userItem._id, userItem.isActive || false)}
+                                      title={userItem.isActive ? 'Deactivate User' : 'Activate User'}
+                                    >
+                                      <i className={`fas ${userItem.isActive ? 'fa-user-times' : 'fa-user-plus'}`}></i>
+                                    </button>
+                                    {userItem.role === 'agent' && (
+                                      <button
+                                        className="btn btn-sm btn-primary"
+                                        onClick={() => handleAssignSubscription(userItem)}
+                                        title="Manage Subscription"
+                                      >
+                                        <i className="fas fa-cog"></i>
+                                      </button>
+                                    )}
+                                  </div>
                                 </td>
                               </tr>
                             ))}
                           </tbody>
                         </table>
+                        {getFilteredUsers().length === 0 && (
+                          <div className="empty-state">
+                            <i className="fas fa-users"></i>
+                            <h5 className="mt-3 mb-2">No Users Found</h5>
+                            <p className="text-muted">No users found for the selected role filter.</p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -394,6 +516,19 @@ const DashboardArea: React.FC = () => {
             setEditingSubscription(null);
           }}
           onSave={handleSubscriptionUpdate}
+        />
+      )}
+
+      {/* User Subscription Modal */}
+      {showUserSubscriptionModal && selectedUser && (
+        <UserSubscriptionModal
+          user={selectedUser}
+          isOpen={showUserSubscriptionModal}
+          onClose={() => {
+            setShowUserSubscriptionModal(false);
+            setSelectedUser(null);
+          }}
+          onSubscriptionAssigned={handleSubscriptionAssigned}
         />
       )}
     </div>

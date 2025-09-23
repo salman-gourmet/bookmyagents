@@ -75,7 +75,7 @@ export const userService = {
   // Update user
   updateUser: async (id: string, userData: UpdateUserData): Promise<User> => {
     try {
-      const response = await api.put(`/users/${id}`, userData);
+      const response = await api.patch(`/users/${id}`, userData);
       return response.data;
     } catch (error) {
       throw error;
@@ -95,6 +95,35 @@ export const userService = {
   updatePassword: async (id: string, passwordData: { currentPassword: string; newPassword: string }): Promise<void> => {
     try {
       await api.put(`/users/${id}/password`, passwordData);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Assign subscription to user
+  assignSubscription: async (userId: string, subscriptionId: string): Promise<User> => {
+    try {
+      const response = await api.post(`/users/${userId}/subscription`, { subscriptionId });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Get user's current subscription
+  getUserSubscription: async (userId: string): Promise<any> => {
+    try {
+      const response = await api.get(`/users/${userId}/subscription`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Cancel user's subscription
+  cancelSubscription: async (userId: string): Promise<void> => {
+    try {
+      await api.delete(`/users/${userId}/subscription`);
     } catch (error) {
       throw error;
     }

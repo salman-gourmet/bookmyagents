@@ -2,7 +2,7 @@ import axios, { type AxiosInstance, type AxiosResponse, AxiosError } from 'axios
 
 // Create axios instance with base configuration
 const api: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://bookmyagents-api.vercel.app/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
