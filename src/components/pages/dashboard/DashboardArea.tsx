@@ -369,13 +369,13 @@ const DashboardArea: React.FC = () => {
                                 <td>{userItem.createdAt ? new Date(userItem.createdAt).toLocaleDateString() : 'N/A'}</td>
                                 <td>
                                   <div className="btn-group" role="group">
-                                    <button
+                                    {userItem.role !== 'admin' && <button
                                       className={`btn btn-sm ${userItem.isActive ? 'btn-warning' : 'btn-success'}`}
                                       onClick={() => handleUserStatusToggle(userItem._id, userItem.isActive || false)}
                                       title={userItem.isActive ? 'Deactivate User' : 'Activate User'}
                                     >
                                       <i className={`fas ${userItem.isActive ? 'fa-user-times' : 'fa-user-plus'}`}></i>
-                                    </button>
+                                    </button>}
                                     {userItem.role === 'agent' && (
                                       <button
                                         className="btn btn-sm btn-primary"
