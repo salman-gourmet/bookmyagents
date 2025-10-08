@@ -13,10 +13,10 @@ const Breadcrumb = () => {
                      <div className="tg-breadcrumb-list-2">
                         <ul>
                            <li><Link to="/">Home</Link></li>
-                           <li><i className="fa-sharp fa-solid fa-angle-right"></i></li>
+                           {/* <li><i className="fa-sharp fa-solid fa-angle-right"></i></li>
                            <li><Link to="/tour-grid-1">Tour Grid</Link></li>
                            <li><i className="fa-sharp fa-solid fa-angle-right"></i></li>
-                           <li><span>Vatican Museums Sistine Chapel Skip the Line</span></li>
+                           <li><span>Vatican Museums Sistine Chapel Skip the Line</span></li> */}
                         </ul>
                      </div>
                   </div>

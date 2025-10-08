@@ -2,7 +2,8 @@ import axios, { type AxiosInstance, type AxiosResponse, AxiosError } from 'axios
 
 // Create axios instance with base configuration
 const api: AxiosInstance = axios.create({
-  baseURL: 'https://bookmyagents-api.vercel.app/api',
+  // baseURL: 'https://bookmyagents-api.vercel.app/api',
+  baseURL: 'http://localhost:3000/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -13,7 +14,7 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
-    console.log("token",token)
+    console.log("token", token)
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

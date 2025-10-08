@@ -1,11 +1,67 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import FeatureList from "./FeatureList"
 import VideoPopup from "../../../modals/VideoPopup";
+import { searchService, type ServiceDetail } from "../../../services/searchService";
 
 const FeatureDetailsArea = () => {
-
+   const [searchParams] = useSearchParams();
    const [isVideoOpen, setIsVideoOpen] = useState(false);
+   const [serviceDetail, setServiceDetail] = useState<ServiceDetail | null>(null);
+   const [isLoading, setIsLoading] = useState(true);
+   const [error, setError] = useState<string | null>(null);
+
+   const serviceId = searchParams.get('id');
+
+   useEffect(() => {
+      const fetchServiceDetail = async () => {
+         if (!serviceId) {
+            setError('No service ID provided');
+            setIsLoading(false);
+            return;
+         }
+
+         try {
+            setIsLoading(true);
+            const detail = await searchService.getServiceDetail(serviceId);
+            setServiceDetail(detail);
+         } catch (err) {
+            console.error('Error fetching service detail:', err);
+            setError('Failed to load service details');
+         } finally {
+            setIsLoading(false);
+         }
+      };
+
+      fetchServiceDetail();
+   }, [serviceId]);
+
+   if (isLoading) {
+      return (
+         <div className="text-center py-5">
+            <div className="spinner-border" role="status">
+               <span className="visually-hidden">Loading...</span>
+            </div>
+         </div>
+      );
+   }
+
+   if (error) {
+      return (
+         <div className="text-center py-5">
+            <h4>Error</h4>
+            <p>{error}</p>
+         </div>
+      );
+   }
+
+   if (!serviceDetail) {
+      return (
+         <div className="text-center py-5">
+            <h4>Service not found</h4>
+         </div>
+      );
+   }
 
    return (
       <>
@@ -14,9 +70,18 @@ const FeatureDetailsArea = () => {
                <div className="row align-items-end mb-35">
                   <div className="col-xl-9 col-lg-8">
                      <div className="tg-tour-details-video-title-wrap">
-                        <h2 className="tg-tour-details-video-title mb-15">Vatican Museums Sistine Chapel Skip the Line</h2>
+                        <h2 className="tg-tour-details-video-title mb-15">{serviceDetail.title}</h2>
+                        {serviceDetail.userId && (
+                           <p className="tg-tour-details-agent mb-10">
+                              <i className="fa-solid fa-user mr-5"></i>
+                              Service Provider: {serviceDetail.userId.fullName}
+                           </p>
+                        )}
                         <div className="tg-tour-details-video-location d-flex flex-wrap">
-                           <span className="mr-25"><i className="fa-regular fa-location-dot"></i> Street Bintage,Veins City, italy</span>
+                           <span className="mr-25">
+                              <i className="fa-regular fa-location-dot"></i>
+                              {serviceDetail.location.city}, {serviceDetail.location.state}, {serviceDetail.location.country}
+                           </span>
                            <div className="tg-tour-details-video-ratings">
                               <span><i className="fa-sharp fa-solid fa-star"></i></span>
                               <span><i className="fa-sharp fa-solid fa-star"></i></span>
@@ -48,35 +113,54 @@ const FeatureDetailsArea = () => {
                <div className="row gx-15 mb-25">
                   <div className="col-lg-7">
                      <div className="tg-tour-details-video-thumb mb-15">
-                        <img className="w-100" src="/assets/img/tour-details/thumb-4.jpg" alt="" />
+                        <img
+                           className="w-100"
+                           src={serviceDetail.pictures && serviceDetail.pictures.length > 0 ? serviceDetail.pictures[0] : "/assets/img/placeholder/placeholder.png"}
+                           alt={serviceDetail.title}
+                        />
                      </div>
                   </div>
                   <div className="col-lg-5">
-                     <div className="row  gx-15">
-                        <div className="col-12">
-                           <div className="tg-tour-details-video-thumb p-relative mb-15">
-                              <img className="w-100" src="/assets/img/tour-details/thumb-1.jpg" alt="" />
-                              <div className="tg-tour-details-video-inner text-center">
-                                 <a onClick={() => setIsVideoOpen(true)} style={{ cursor: "pointer" }} className="tg-video-play popup-video tg-pulse-border">
-                                    <span className="p-relative z-index-11">
-                                       <svg width="19" height="21" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                          <path d="M17.3616 8.34455C19.0412 9.31425 19.0412 11.7385 17.3616 12.7082L4.13504 20.3445C2.45548 21.3142 0.356021 20.1021 0.356021 18.1627L0.356022 2.89C0.356022 0.950609 2.45548 -0.261512 4.13504 0.708185L17.3616 8.34455Z" fill="currentColor" />
-                                       </svg>
-                                    </span>
-                                 </a>
+                     <div className="row gx-15">
+                        {serviceDetail.pictures && serviceDetail.pictures.length > 1 ? (
+                           <>
+                              <div className="col-12">
+                                 <div className="tg-tour-details-video-thumb p-relative mb-15">
+                                    <img
+                                       className="w-100"
+                                       src={serviceDetail.pictures[1] || "/assets/img/placeholder/placeholder.png"}
+                                       alt={serviceDetail.title}
+                                    />
+                                    <div className="tg-tour-details-video-inner text-center">
+                                       <a onClick={() => setIsVideoOpen(true)} style={{ cursor: "pointer" }} className="tg-video-play popup-video tg-pulse-border">
+                                          <span className="p-relative z-index-11">
+                                             <svg width="19" height="21" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M17.3616 8.34455C19.0412 9.31425 19.0412 11.7385 17.3616 12.7082L4.13504 20.3445C2.45548 21.3142 0.356021 20.1021 0.356021 18.1627L0.356022 2.89C0.356022 0.950609 2.45548 -0.261512 4.13504 0.708185L17.3616 8.34455Z" fill="currentColor" />
+                                             </svg>
+                                          </span>
+                                       </a>
+                                    </div>
+                                 </div>
+                              </div>
+                              {serviceDetail.pictures.slice(2, 4).map((picture, index) => (
+                                 <div key={index} className="col-lg-6 col-md-6">
+                                    <div className="tg-tour-details-video-thumb mb-15">
+                                       <img className="w-100" src={picture} alt={serviceDetail.title} />
+                                    </div>
+                                 </div>
+                              ))}
+                           </>
+                        ) : (
+                           <div className="col-12">
+                              <div className="tg-tour-details-video-thumb p-relative mb-15">
+                                 <img
+                                    className="w-100"
+                                    src="/assets/img/placeholder/placeholder.png"
+                                    alt={serviceDetail.title}
+                                 />
                               </div>
                            </div>
-                        </div>
-                        <div className="col-lg-6 col-md-6">
-                           <div className="tg-tour-details-video-thumb mb-15">
-                              <img className="w-100" src="/assets/img/tour-details/thumb-2.jpg" alt="" />
-                           </div>
-                        </div>
-                        <div className="col-lg-6 col-md-6">
-                           <div className="tg-tour-details-video-thumb mb-15">
-                              <img className="w-100" src="/assets/img/tour-details/thumb-3.jpg" alt="" />
-                           </div>
-                        </div>
+                        )}
                      </div>
                   </div>
                </div>
@@ -89,7 +173,7 @@ const FeatureDetailsArea = () => {
                      </div>
                      <div className="col-lg-4">
                         <div className="tg-tour-details-video-feature-price mb-15">
-                           <p>From <span>$59.00</span> / Person</p>
+                           <p>From <span>${serviceDetail.price}</span> / Person</p>
                         </div>
                      </div>
                   </div>

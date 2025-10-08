@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Flatpickr from 'react-flatpickr';
+import { searchService, type SearchParams } from "../../../services/searchService";
 
 interface DataType {
    id: number;
@@ -26,12 +28,14 @@ const guest_data: DataType[] = [
 ];
 
 const BannerFormTwo = () => {
-
+   const navigate = useNavigate();
    const [location, setLocation] = useState(false);
+   const [selectedLocation, setSelectedLocation] = useState<string>("");
    const [checkInDate, setCheckInDate] = useState<Date | Date[]>(new Date());
    const [checkOutDate, setCheckOutDate] = useState<Date | Date[]>(new Date());
    const [guest, setGuest] = useState(false);
    const [guestCounts, setGuestCounts] = useState<DataType[]>(guest_data);
+   const [isLoading, setIsLoading] = useState(false);
 
    const locationRef = useRef<HTMLDivElement>(null);
    const guestRef = useRef<HTMLDivElement>(null);
@@ -76,14 +80,59 @@ const BannerFormTwo = () => {
       );
    };
 
+   const handleLocationSelect = (locationName: string) => {
+      setSelectedLocation(locationName);
+      setLocation(false);
+   };
+
+   const formatDate = (date: Date | Date[]): string => {
+      if (Array.isArray(date)) {
+         return date[0] ? date[0].toISOString().split('T')[0] : '';
+      }
+      return date ? date.toISOString().split('T')[0] : '';
+   };
+
+   const handleSearch = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setIsLoading(true);
+
+      try {
+         const searchParams: SearchParams = {
+            // latitude: 40.7128, // Default coordinates, can be enhanced with geolocation
+            // longitude: -74.0060,
+            // query: selectedLocation || 'hotels',
+            // radius: 5000,
+            // maxDistance: 100,
+            // checkIn: formatDate(checkInDate),
+            // checkOut: formatDate(checkOutDate),
+            // guests: guestCounts.find(g => g.title === 'Adults')?.count || 1,
+         };
+
+         const response = await searchService.searchTours(searchParams);
+
+         // Store search results in localStorage for the tour grid page
+         localStorage.setItem('searchResults', JSON.stringify(response));
+         localStorage.setItem('searchParams', JSON.stringify(searchParams));
+
+         // Navigate to tour grid page
+         navigate('/tour-grid-1');
+      } catch (error) {
+         console.error('Search failed:', error);
+         // Still navigate to tour grid page even if search fails
+         navigate('/tour-grid-1');
+      } finally {
+         setIsLoading(false);
+      }
+   };
+
    return (
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSearch}>
          <div className="tg-booking-form-input-group d-flex align-items-end justify-content-between">
             <div className="tg-booking-form-parent-inner tg-hero-quantity p-relative mr-15 mb-10">
-            <span className="tg-booking-form-title mb-5">Check in:</span>
+               <span className="tg-booking-form-title mb-5">Check in:</span>
                {/* <span className="tg-booking-form-title mb-5">Destinations:</span> */}
                <div ref={locationRef} onClick={() => setLocation((prev) => !prev)} className={`tg-booking-add-input-field tg-booking-quantity-toggle ${location ? "active" : ""} `}>
-                  <span className="tg-booking-title-value">Where are you going . . .</span>
+                  <span className="tg-booking-title-value">{selectedLocation || "Where are you going . . ."}</span>
                   <span className="location">
                      <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.3329 6.7071C12.3329 11.2324 6.55512 15.1111 6.55512 15.1111C6.55512 15.1111 0.777344 11.2324 0.777344 6.7071C0.777344 5.16402 1.38607 3.68414 2.46962 2.59302C3.55316 1.5019 5.02276 0.888916 6.55512 0.888916C8.08748 0.888916 9.55708 1.5019 10.6406 2.59302C11.7242 3.68414 12.3329 5.16402 12.3329 6.7071Z" stroke="currentColor" strokeWidth="1.15556" strokeLinecap="round" strokeLinejoin="round" />
@@ -93,23 +142,23 @@ const BannerFormTwo = () => {
                </div>
                <div className={`tg-booking-form-location-list tg-booking-quantity-active ${location ? "tg-list-open" : ""}`}>
                   <ul className="scrool-bar scrool-height pr-5">
-                     <li>
+                     <li onClick={() => handleLocationSelect("Chicago")}>
                         <i className="fa-regular fa-location-dot"></i>
                         <span>Chicago</span>
                      </li>
-                     <li>
+                     <li onClick={() => handleLocationSelect("Los Angeles")}>
                         <i className="fa-regular fa-location-dot"></i>
                         <span>Los Angeles</span>
                      </li>
-                     <li>
+                     <li onClick={() => handleLocationSelect("London")}>
                         <i className="fa-regular fa-location-dot"></i>
                         <span>London</span>
                      </li>
-                     <li>
+                     <li onClick={() => handleLocationSelect("Paris")}>
                         <i className="fa-regular fa-location-dot"></i>
                         <span>Paris</span>
                      </li>
-                     <li>
+                     <li onClick={() => handleLocationSelect("Dubai")}>
                         <i className="fa-regular fa-location-dot"></i>
                         <span>Dubai</span>
                      </li>
@@ -201,7 +250,8 @@ const BannerFormTwo = () => {
                </div>
             </div>
             <div className="tg-booking-form-search-btn mb-10">
-               <button className="bk-search-button" type="submit">Search
+               <button className="bk-search-button" type="submit" disabled={isLoading}>
+                  {isLoading ? "Searching..." : "Search"}
                   <span className="ml-5">
                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clipPath="url(#clip0_53_103)">
