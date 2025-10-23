@@ -5,14 +5,18 @@ import { type User } from '../../../services/authService';
 import { subscriptionService, type Subscription } from '../../../services/subscriptionService';
 import EditSubscriptionModal from './EditSubscriptionModal';
 import UserSubscriptionModal from './UserSubscriptionModal';
+import BlogManagement from '../admin/BlogManagement';
+import AgentBlogManagement from '../admin/AgentBlogManagement';
 
-type ActiveModule = 'users' | 'subscriptions';
+type ActiveModule = 'users' | 'subscriptions' | 'blogs';
 type UserRoleFilter = 'all' | 'admin' | 'agent' | 'user';
 
 const DashboardArea: React.FC = () => {
   const { user } = useAuth();
-  const [activeModule, setActiveModule] = useState<ActiveModule>('users');
-  
+  const [activeModule, setActiveModule] = useState<ActiveModule>(
+    user?.role === 'admin' ? 'users' : 'blogs'
+  );
+
   // User Module State
   const [users, setUsers] = useState<User[]>([]);
   const [userLoading, setUserLoading] = useState(false);
@@ -40,9 +44,10 @@ const DashboardArea: React.FC = () => {
   useEffect(() => {
     if (activeModule === 'users') {
       fetchUsers();
-    } else {
+    } else if (activeModule === 'subscriptions') {
       fetchSubscriptions();
     }
+    // Blog module doesn't need initial fetch as it's handled in AgentBlogManagement
   }, [activeModule]);
 
   const fetchUsers = async () => {
@@ -50,10 +55,10 @@ const DashboardArea: React.FC = () => {
       setUserLoading(true);
       const response = await userService.getUsers(userFilters);
       console.log("users data", response);
-      
+
       // Set users data
       setUsers(response.data || []);
-      
+
       // Set statistics from the response
       if (response.statistics) {
         setUserStats({
@@ -94,9 +99,9 @@ const DashboardArea: React.FC = () => {
 
   const handleSubscriptionUpdate = async (subscriptionData: Partial<Subscription>) => {
     if (!editingSubscription) return;
-    
+
     try {
-      await subscriptionService.updateSubscription({_id:editingSubscription._id,...subscriptionData});
+      await subscriptionService.updateSubscription({ _id: editingSubscription._id, ...subscriptionData });
       setShowEditModal(false);
       setEditingSubscription(null);
       fetchSubscriptions(); // Refresh the list
@@ -150,7 +155,12 @@ const DashboardArea: React.FC = () => {
               <div className="row align-items-center">
                 <div className="col-lg-8 col-md-7 col-12">
                   <h2 className="dashboard-title">Welcome back, {user?.fullName || 'User'}!</h2>
-                  <p className="dashboard-subtitle">Manage your users and subscriptions from here.</p>
+                  <p className="dashboard-subtitle">
+                    {user?.role === 'admin'
+                      ? 'Manage your users and subscriptions from here.'
+                      : 'Manage your blog posts and content from here.'
+                    }
+                  </p>
                 </div>
                 <div className="col-lg-4 col-md-5 col-12 text-md-end text-start mt-md-0 mt-3">
                   {/* <button 
@@ -167,27 +177,39 @@ const DashboardArea: React.FC = () => {
             {/* Module Navigation */}
             <div className="module-navigation mb-40">
               <div className="nav nav-pills justify-content-center flex-wrap">
+                {user?.role === 'admin' && (
+                  <>
+                    <button
+                      className={`nav-link ${activeModule === 'users' ? 'active' : ''}`}
+                      onClick={() => setActiveModule('users')}
+                    >
+                      <i className="fas fa-users me-2"></i>
+                      <span className="d-none d-sm-inline">User Module</span>
+                      <span className="d-sm-none">Users</span>
+                    </button>
+                    <button
+                      className={`nav-link ${activeModule === 'subscriptions' ? 'active' : ''}`}
+                      onClick={() => setActiveModule('subscriptions')}
+                    >
+                      <i className="fas fa-credit-card me-2"></i>
+                      <span className="d-none d-sm-inline">Subscription Module</span>
+                      <span className="d-sm-none">Subscriptions</span>
+                    </button>
+                  </>
+                )}
                 <button
-                  className={`nav-link ${activeModule === 'users' ? 'active' : ''}`}
-                  onClick={() => setActiveModule('users')}
+                  className={`nav-link ${activeModule === 'blogs' ? 'active' : ''}`}
+                  onClick={() => setActiveModule('blogs')}
                 >
-                  <i className="fas fa-users me-2"></i>
-                  <span className="d-none d-sm-inline">User Module</span>
-                  <span className="d-sm-none">Users</span>
-                </button>
-                <button
-                  className={`nav-link ${activeModule === 'subscriptions' ? 'active' : ''}`}
-                  onClick={() => setActiveModule('subscriptions')}
-                >
-                  <i className="fas fa-credit-card me-2"></i>
-                  <span className="d-none d-sm-inline">Subscription Module</span>
-                  <span className="d-sm-none">Subscriptions</span>
+                  <i className="fas fa-blog me-2"></i>
+                  <span className="d-none d-sm-inline">Blog Module</span>
+                  <span className="d-sm-none">Blogs</span>
                 </button>
               </div>
             </div>
 
-            {/* User Module */}
-            {activeModule === 'users' && (
+            {/* User Module - Admin Only */}
+            {activeModule === 'users' && user?.role === 'admin' && (
               <>
                 {/* User Stats Cards */}
                 <div className="row mb-40">
@@ -239,7 +261,7 @@ const DashboardArea: React.FC = () => {
                           className="form-control"
                           placeholder="Search users..."
                           value={userFilters.search}
-                          onChange={(e) => setUserFilters({...userFilters, search: e.target.value})}
+                          onChange={(e) => setUserFilters({ ...userFilters, search: e.target.value })}
                         />
                       </div>
                       <div className="col-lg-2 col-md-3 col-6">
@@ -253,7 +275,7 @@ const DashboardArea: React.FC = () => {
                         </button>
                       </div>
                     </div>
-                    
+
                     {/* Role Filter Tabs */}
                     <div className="role-filter-tabs">
                       <div className="nav nav-pills justify-content-center">
@@ -295,9 +317,9 @@ const DashboardArea: React.FC = () => {
                 <div className="dashboard-card">
                   <div className="card-header">
                     <h4>
-                      {roleFilter === 'all' ? 'All Users' : 
-                       roleFilter === 'admin' ? 'Admin Users' :
-                       roleFilter === 'agent' ? 'Agent Users' : 'Regular Users'}
+                      {roleFilter === 'all' ? 'All Users' :
+                        roleFilter === 'admin' ? 'Admin Users' :
+                          roleFilter === 'agent' ? 'Agent Users' : 'Regular Users'}
                       <span className="badge bg-secondary ms-2">{getFilteredUsers().length}</span>
                     </h4>
                   </div>
@@ -328,10 +350,9 @@ const DashboardArea: React.FC = () => {
                                 <td>{userItem.fullName}</td>
                                 <td>{userItem.email}</td>
                                 <td>
-                                  <span className={`badge ${
-                                    userItem.role === 'admin' ? 'bg-danger' : 
+                                  <span className={`badge ${userItem.role === 'admin' ? 'bg-danger' :
                                     userItem.role === 'agent' ? 'bg-warning' : 'bg-primary'
-                                  }`}>
+                                    }`}>
                                     {userItem.role || 'user'}
                                   </span>
                                 </td>
@@ -405,8 +426,8 @@ const DashboardArea: React.FC = () => {
               </>
             )}
 
-            {/* Subscription Module */}
-            {activeModule === 'subscriptions' && (
+            {/* Subscription Module - Admin Only */}
+            {activeModule === 'subscriptions' && user?.role === 'admin' && (
               <>
                 {/* Subscription Stats */}
                 <div className="row mb-40">
@@ -502,6 +523,15 @@ const DashboardArea: React.FC = () => {
                   </div>
                 </div>
               </>
+            )}
+
+            {/* Blog Module */}
+            {activeModule === 'blogs' && (
+              user?.role === 'admin' ? (
+                <BlogManagement />
+              ) : (
+                <AgentBlogManagement />
+              )
             )}
           </div>
         </div>

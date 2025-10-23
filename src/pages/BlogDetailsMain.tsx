@@ -1,4 +1,4 @@
-import About from "../components/pages/about"
+import BlogDetails from "../components/blogs/blog-details"
 import SEO from "../components/SEO"
 import Wrapper from "../layouts/Wrapper"
 
@@ -6,7 +6,7 @@ const BlogDetailsMain = () => {
    return (
       <Wrapper>
          <SEO pageTitle={'Blog Details'} />
-         <About />
+         <BlogDetails />
       </Wrapper>
    )
 }

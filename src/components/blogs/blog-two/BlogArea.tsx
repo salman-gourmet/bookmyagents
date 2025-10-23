@@ -29,7 +29,18 @@ const BlogArea = () => {
                      {currentItems.map((item) => (
                         <div key={item.id} className="tg-blog-standard-item mb-40">
                            <div className="tg-blog-standard-thumb mb-15">
-                              <Link to="/blog-details"><img className="w-100" src={item.thumb} alt="blog" /></Link>
+                              <Link to="/blog-details">
+                                 <img
+                                    className="w-100"
+                                    src={item.thumb}
+                                    alt="blog"
+                                    style={{
+                                       height: '300px',
+                                       objectFit: 'cover',
+                                       borderRadius: '8px'
+                                    }}
+                                 />
+                              </Link>
                            </div>
                            <div className="tg-blog-standard-content">
                               <div className="tg-blog-standard-date mb-10">
