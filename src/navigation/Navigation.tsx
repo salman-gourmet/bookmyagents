@@ -31,8 +31,10 @@ import ContactMain from '../pages/ContactMain';
 import ErrorMain from '../pages/ErrorMain';
 import DashboardMain from '../pages/DashboardMain';
 import AgentDashboardMain from '../pages/AgentDashboardMain';
+import ProfileMain from '../pages/ProfileMain';
 import AdminRoute from '../components/common/AdminRoute';
 import AgentRoute from '../components/common/AgentRoute';
+import ProtectedRoute from '../components/common/ProtectedRoute';
 
 const AppNavigation = () => {
   return (
@@ -76,6 +78,11 @@ const AppNavigation = () => {
           <AgentRoute>
             <AgentDashboardMain />
           </AgentRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <ProfileMain />
+          </ProtectedRoute>
         } />
         <Route path="*" element={<ErrorMain />} />
       </Routes>

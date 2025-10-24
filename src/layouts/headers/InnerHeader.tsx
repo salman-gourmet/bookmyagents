@@ -24,12 +24,12 @@ const InnerHeader = () => {
 
    const handleLogout = async () => {
       try {
-          await logout();
-          setNavClick(false);
+         await logout();
+         setNavClick(false);
       } catch (error) {
-          console.error('Logout error:', error);
+         console.error('Logout error:', error);
       }
-  };
+   };
 
    // Close dropdown when clicking outside
    useEffect(() => {
@@ -81,10 +81,10 @@ const InnerHeader = () => {
                                  </button>
                                  <HeaderCart />
                               </div>
-                              {isAuthenticated ? 
+                              {isAuthenticated ?
                                  <div className="tg-header-btn ml-10 d-none d-sm-block">
                                     <div className="tg-header-user-menu" ref={userMenuRef}>
-                                       <button 
+                                       <button
                                           className="tg-header-user-button"
                                           onClick={() => setNavClick(!navClick)}
                                        >
@@ -109,8 +109,8 @@ const InnerHeader = () => {
                                                 </div>
                                              </li>
                                              <li className="tg-header-user-dropdown-item">
-                                                <Link 
-                                                   to="/" 
+                                                <Link
+                                                   to="/"
                                                    onClick={() => setNavClick(false)}
                                                 >
                                                    Home
@@ -118,8 +118,8 @@ const InnerHeader = () => {
                                              </li>
                                              {isAdmin && (
                                                 <li className="tg-header-user-dropdown-item">
-                                                   <Link 
-                                                      to="/dashboard" 
+                                                   <Link
+                                                      to="/dashboard"
                                                       onClick={() => setNavClick(false)}
                                                    >
                                                       Admin Dashboard
@@ -128,14 +128,22 @@ const InnerHeader = () => {
                                              )}
                                              {isAgent && (
                                                 <li className="tg-header-user-dropdown-item">
-                                                   <Link 
-                                                      to="/agent-dashboard" 
+                                                   <Link
+                                                      to="/agent-dashboard"
                                                       onClick={() => setNavClick(false)}
                                                    >
                                                       Agent Dashboard
                                                    </Link>
                                                 </li>
                                              )}
+                                             <li className="tg-header-user-dropdown-item">
+                                                <Link
+                                                   to="/profile"
+                                                   onClick={() => setNavClick(false)}
+                                                >
+                                                   Profile
+                                                </Link>
+                                             </li>
                                              <li className="tg-header-user-dropdown-item">
                                                 <button onClick={handleLogout}>
                                                    Logout
@@ -145,14 +153,14 @@ const InnerHeader = () => {
                                        )}
                                     </div>
                                  </div>
-                               : <div className="tg-header-btn ml-20 d-none d-sm-block">
-                                 <Link className="tg-btn-header" to="/login">
-                                    <span>
-                                       <UserIcon />
-                                    </span>
-                                    Login
-                                 </Link>
-                              </div>}
+                                 : <div className="tg-header-btn ml-20 d-none d-sm-block">
+                                    <Link className="tg-btn-header" to="/login">
+                                       <span>
+                                          <UserIcon />
+                                       </span>
+                                       Login
+                                    </Link>
+                                 </div>}
                               <div className="tg-header-menu-bar lh-1 p-relative ml-10">
                                  <button onClick={() => setSidebar(true)} className="tgmenu-offcanvas-open-btn menu-tigger d-none d-xl-block">
                                     <span></span>

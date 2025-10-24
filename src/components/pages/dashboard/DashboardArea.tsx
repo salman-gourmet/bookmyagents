@@ -205,6 +205,14 @@ const DashboardArea: React.FC = () => {
                   <span className="d-none d-sm-inline">Blog Module</span>
                   <span className="d-sm-none">Blogs</span>
                 </button>
+                <button
+                  className="nav-link"
+                  onClick={() => window.location.href = '/profile'}
+                >
+                  <i className="fas fa-user me-2"></i>
+                  <span className="d-none d-sm-inline">Profile</span>
+                  <span className="d-sm-none">Profile</span>
+                </button>
               </div>
             </div>
 
