@@ -85,12 +85,6 @@ const BannerFormTwo = () => {
       setLocation(false);
    };
 
-   const formatDate = (date: Date | Date[]): string => {
-      if (Array.isArray(date)) {
-         return date[0] ? date[0].toISOString().split('T')[0] : '';
-      }
-      return date ? date.toISOString().split('T')[0] : '';
-   };
 
    const handleSearch = async (e: React.FormEvent) => {
       e.preventDefault();

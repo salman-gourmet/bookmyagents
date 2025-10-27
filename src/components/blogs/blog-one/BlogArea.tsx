@@ -12,8 +12,6 @@ const BlogArea = () => {
    const [error, setError] = useState<string | null>(null);
    const [currentPage, setCurrentPage] = useState(1);
    const [totalPages, setTotalPages] = useState(1);
-   const [likedBlogs, setLikedBlogs] = useState<Set<string>>(new Set());
-   const [dislikedBlogs, setDislikedBlogs] = useState<Set<string>>(new Set());
 
    const itemsPerPage = 8;
 
@@ -40,49 +38,6 @@ const BlogArea = () => {
       setCurrentPage(event.selected + 1);
    };
 
-   const handleLike = async (blogId: string) => {
-      try {
-         await blogService.likeBlog(blogId);
-         setLikedBlogs(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(blogId)) {
-               newSet.delete(blogId);
-            } else {
-               newSet.add(blogId);
-               setDislikedBlogs(prevDisliked => {
-                  const newDislikedSet = new Set(prevDisliked);
-                  newDislikedSet.delete(blogId);
-                  return newDislikedSet;
-               });
-            }
-            return newSet;
-         });
-      } catch (err) {
-         console.error('Error liking blog:', err);
-      }
-   };
-
-   const handleDislike = async (blogId: string) => {
-      try {
-         await blogService.dislikeBlog(blogId);
-         setDislikedBlogs(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(blogId)) {
-               newSet.delete(blogId);
-            } else {
-               newSet.add(blogId);
-               setLikedBlogs(prevLiked => {
-                  const newLikedSet = new Set(prevLiked);
-                  newLikedSet.delete(blogId);
-                  return newLikedSet;
-               });
-            }
-            return newSet;
-         });
-      } catch (err) {
-         console.error('Error disliking blog:', err);
-      }
-   };
 
    const formatDate = (dateString: string | Date) => {
       const date = new Date(dateString);

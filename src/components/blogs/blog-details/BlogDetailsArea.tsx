@@ -1,7 +1,5 @@
-import Comment from "./Comment";
 import BlogSidebar from "../blog-sidebar";
 import { Link, useSearchParams } from "react-router-dom";
-import BlogForm from "../../forms/BlogForm";
 import { useState, useEffect } from "react";
 import { blogService } from "../../../services/blogService";
 import { type Blog } from "../../../types/blog";
