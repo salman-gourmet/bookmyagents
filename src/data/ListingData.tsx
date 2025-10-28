@@ -149,7 +149,7 @@ const listing_data: DataType[] = [
    },
    {
       id: 5,
-      page: "home_3",
+      page: "home_31",
       thumb: "/assets/img/listing/listing-5.jpg",
       time: "3 Days",
       title: "southwestern Switzerland Akam City",
@@ -161,7 +161,7 @@ const listing_data: DataType[] = [
    },
    {
       id: 6,
-      page: "home_3",
+      page: "home_31",
       thumb: "/assets/img/listing/listing-6.jpg",
       featured: "Featured",
       time: "5 Days",
@@ -174,7 +174,7 @@ const listing_data: DataType[] = [
    },
    {
       id: 7,
-      page: "home_3",
+      page: "home_31",
       thumb: "/assets/img/listing/listing-8.jpg",
       time: "7 Days",
       title: "Vatican Museums, Sistine Chapel Skip the Line",
@@ -186,7 +186,7 @@ const listing_data: DataType[] = [
    },
    {
       id: 8,
-      page: "home_3",
+      page: "home_31",
       thumb: "/assets/img/listing/listing-4.jpg",
       time: "4 Days",
       title: "win cities on opposite sides of the",

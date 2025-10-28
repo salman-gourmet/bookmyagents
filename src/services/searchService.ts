@@ -12,7 +12,7 @@ export interface SearchParams {
 }
 
 export interface ServiceDetail {
-    _id: string;
+    _id?: string;
     title: string;
     description: string;
     contactDetails: {
@@ -22,7 +22,7 @@ export interface ServiceDetail {
         website: string;
     };
     pictures: string[];
-    userId: {
+    userId?: string | {
         _id: string;
         fullName: string;
         email: string;
@@ -42,9 +42,35 @@ export interface ServiceDetail {
     source: string;
     isAd: boolean;
     priorityScore: number;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
+    createdAt?: string;
+    updatedAt?: string;
+    __v?: number;
+    tour?: {
+        title: string;
+        location: string;
+        rating: number;
+        numberOfReviews: number;
+        price: number;
+        currency: string;
+        images: string[];
+        description: string;
+    };
+    bookingOptions?: {
+        duration: string;
+        groupSize: string;
+        bookingSlots: Array<{
+            time: string;
+            price: number;
+            description: string;
+        }>;
+    };
+    highlights?: string[];
+    inclusions?: string[];
+    locationData?: {
+        latitude: number;
+        longitude: number;
+        mapUrl: string;
+    };
 }
 
 export interface ServiceDetailResponse {

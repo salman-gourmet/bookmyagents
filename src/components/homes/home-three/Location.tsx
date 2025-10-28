@@ -15,7 +15,7 @@ const Location = () => {
                         to step out of your comfort zonetravel</p>
                   </div>
                </div>
-               {location_data.filter((items) => items.page === "home_3").map((item) => (
+               {location_data.filter((items) => items.page === "home_1").map((item) => (
                   <div key={item.id} className="col-lg-3 col-md-6 col-sm-6 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".9s">
                      <div className="bg-white tg-round-25 p-relative z-index-1">
                         <div className="tg-location-wrap p-relative mb-30">
