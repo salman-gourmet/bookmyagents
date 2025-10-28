@@ -64,7 +64,7 @@ const AboutText = ({ serviceDetail }: AboutTextProps) => {
             </div>
          </div>
 
-         {serviceDetail?.userId && (
+         {serviceDetail?.userId && typeof serviceDetail.userId === 'object' && (
             <div className="tg-tour-about-inner mb-40">
                <h4 className="tg-tour-about-title mb-20">Service Provider</h4>
                <div className="tg-tour-about-list">

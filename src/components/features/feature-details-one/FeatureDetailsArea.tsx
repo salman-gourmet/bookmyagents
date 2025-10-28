@@ -71,7 +71,7 @@ const FeatureDetailsArea = () => {
                   <div className="col-xl-9 col-lg-8">
                      <div className="tg-tour-details-video-title-wrap">
                         <h2 className="tg-tour-details-video-title mb-15">{serviceDetail.title}</h2>
-                        {serviceDetail.userId && (
+                        {serviceDetail.userId && typeof serviceDetail.userId === 'object' && (
                            <p className="tg-tour-details-agent mb-10">
                               <i className="fa-solid fa-user mr-5"></i>
                               Service Provider: {serviceDetail.userId.fullName}
